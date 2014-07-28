@@ -1,0 +1,28 @@
+<partnerships>
+  <partner name="myCompany" as2_id="myCompany" x509_alias="myCompany" email="myCompany@myCompany.com"/>
+  <partner name="myPartner" as2_id="myPartner" x509_alias="myPartner" email="myPartner@myPartner.com"/>
+
+  <partnership name="myPartner-myCompany">
+    <sender name="myPartner"/>
+    <receiver name="myCompany"/>
+    <attribute name="protocol" value="as2"/>
+    <attribute name="subject" value="From myPartner to myCompany"/>
+    <attribute name="as2_url" value="http://localhost:10080"/>
+    <attribute name="as2_mdn_to" value="http://localhost:10081"/>
+    <attribute name="as2_mdn_options" value="signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1"/>
+    <attribute name="encrypt" value="3des"/>
+    <attribute name="sign" value="sha1"/>
+  </partnership>
+
+  <partnership name="myCompany-myPartner">
+    <sender name="myCompany"/>
+    <receiver name="myPartner"/>
+    <attribute name="protocol" value="as2"/>
+    <attribute name="subject" value="From myCompany to myPartner"/>
+    <attribute name="as2_url" value="http://localhost:20080"/>
+    <attribute name="as2_mdn_to" value="http://localhost:20081"/>
+    <attribute name="as2_mdn_options" value="signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1"/>
+    <attribute name="encrypt" value="3des"/>
+    <attribute name="sign" value="sha1"/>
+  </partnership>
+</partnerships>

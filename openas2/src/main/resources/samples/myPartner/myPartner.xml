@@ -1,0 +1,49 @@
+<openas2>
+  <certificates classname="org.openas2.cert.PKCS12CertificateFactory" filename="%home%/myPartner.p12" password="passw0rd" interval="300"/>    
+  <partnerships classname="org.openas2.partner.XMLPartnershipFactory" filename="%home%/partnerships.xml"/>
+
+  <loggers>
+    <logger classname="org.openas2.logging.ConsoleLogger"/>
+    <logger classname="org.openas2.logging.FileLogger" filename="%home%/log-$date.MMddyyyy$.txt"/>      
+  </loggers>
+
+  <commands classname="org.openas2.cmd.XMLCommandRegistry" filename="%home%/commands.xml"/>
+
+  <commandProcessors>
+    <commandProcessor classname="org.openas2.cmd.processor.StreamCommandProcessor"/>
+    <commandProcessor classname="org.openas2.cmd.processor.SocketCommandProcessor"  portId="1234" userid="userID" password="pWd"/>
+  </commandProcessors>
+
+  <processor classname="org.openas2.processor.DefaultProcessor" pendingMDN="%home%/pendingMDN3" pendingMDNinfo="%home%/pendinginfoMDN3">
+    <module classname="org.openas2.processor.sender.AS2SenderModule"></module>
+
+    <module classname="org.openas2.processor.receiver.AS2DirectoryPollingModule"
+      outboxdir="%home%/To_any" errordir="%home%/To_any/error" interval="5" delimiters="-."
+      format="sender.as2_id, receiver.as2_id, attributes.fileid" mimetype="application/EDIFACT"/>
+
+    <module classname="org.openas2.processor.receiver.AS2DirectoryPollingModule"
+      outboxdir="%home%/To_myCompany" errordir="%home%/To_myCompany/error"
+      interval="5" defaults="sender.as2_id=myPartner, receiver.as2_id=myCompany" mimetype="application/EDIFACT"/>          
+
+    <module classname="org.openas2.processor.receiver.AS2DirectoryPollingModule"
+      outboxdir="%home%/To_myPartner" errordir="%home%/To_myPartner/error"      
+      interval="5" defaults="sender.as2_id=myCompany, receiver.as2_id=myPartner" sendFilename="true" mimetype="application/EDIFACT"/>
+
+    <module classname="org.openas2.processor.storage.MDNFileModule"
+      filename="%home%/mdn/$date.yyyy$/$date.MM$/$mdn.msg.sender.as2_id$-$mdn.msg.receiver.as2_id$-$mdn.msg.headers.message-id$"      
+      protocol="as2" tempdir="%home%/temp"/>
+
+    <module classname="org.openas2.processor.storage.MessageFileModule"
+      filename="%home%/inbox/$msg.sender.as2_id$-$msg.receiver.as2_id$-$msg.headers.message-id$"
+      header="%home%/inbox/msgheaders/$date.yyyy$/$date.MM$/$msg.sender.as2_id$-$msg.receiver.as2_id$-$msg.headers.message-id$"    
+      protocol="as2" tempdir="%home%/temp"/>    
+
+    <module classname="org.openas2.processor.receiver.AS2ReceiverModule" port="20080"
+            errordir="%home%/inbox/error" errorformat="sender.as2_id, receiver.as2_id, headers.message-id"/>        
+
+    <module classname="org.openas2.processor.receiver.AS2MDNReceiverModule" port="20081"/>
+
+    <module classname="org.openas2.processor.resender.DirectoryResenderModule"
+            resenddir="%home%/resend" errordir="%home%/resend/error" resenddelay="60"/>      
+  </processor>
+</openas2>
