@@ -2,3 +2,4 @@
 .project
 /target
 *log*.txt
+/bin
